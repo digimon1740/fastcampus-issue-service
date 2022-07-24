@@ -87,4 +87,13 @@ class UserService(
     suspend fun get(userId: Long): User {
         return userRepository.findById(userId) ?: throw UserNotFoundException()
     }
+
+    suspend fun edit(token: String, username: String, profileUrl: String?): User {
+        val user = getByToken(token)
+        val newUser = user.copy(username = username, profileUrl = profileUrl ?: user.profileUrl)
+
+        return userRepository.save(newUser).also {
+            cacheManager.awaitPut(key = token, value = it, ttl = CACHE_TTL)
+        }
+    }
 }
