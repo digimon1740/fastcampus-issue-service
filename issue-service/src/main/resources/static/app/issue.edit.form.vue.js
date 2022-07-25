@@ -80,9 +80,6 @@ const IssueEditForm = {
                     >
                     <q-item-section avatar style="width:100%">
                         <q-chip>
-                            <q-avatar size="24px">
-                                <img :src="comment.profileUrl">
-                            </q-avatar>
                             {{comment.username}}
                         </q-chip>
                         
@@ -174,7 +171,7 @@ const IssueEditForm = {
             this.editCommentId = comment.id
         },
         editComment(comment) {
-            if (!this.newComment) {
+            if (!comment || !comment.body) {
                 return
             }
             let accessToken = localStorage.getItem('token')
